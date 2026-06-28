@@ -91,6 +91,14 @@ class Orchestrator:
         if text == "attack" and target:
             return self._run_attack(target)
 
+        if text.startswith("bypass ") or text.startswith("force "):
+            parts = text.split(maxsplit=2)
+            t = parts[1] if len(parts) > 1 else target
+            method = parts[2] if len(parts) > 2 else "auto"
+            if t:
+                return self._run_bypass(t, method)
+            return "Tell me what target to bypass."
+
         if text.startswith("attack "):
             t = self._extract_target(text)
             if t:
@@ -193,6 +201,22 @@ class Orchestrator:
         self.session.set_stage("exploited")
         self.session.add_action("autopwn", f"Full autopwn on {target}")
         return self._after_exploit(target)
+
+    def _run_bypass(self, target, method="auto"):
+        if not self._tor_check("bypass"):
+            return "Bypass blocked — TOR safety."
+        self.session.set_target(target)
+        print(colored(f"\n[*] Bypass engine on {target} (method: {method})...", "33"))
+        try:
+            from modules.bypass import run_bypass
+            results = run_bypass(target, method)
+            if results:
+                self.session.set_stage("bypassed")
+                self.session.add_action("bypass", f"Bypassed {target} via {method}")
+                return f"Bypass successful! Retrieved {len(results)} source(s). Content available."
+            return f"Bypass exhausted — could not retrieve content from {target}."
+        except Exception as e:
+            return f"Bypass failed: {e}"
 
     def _run_attack(self, target):
         if not self._tor_check("attack"):

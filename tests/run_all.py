@@ -56,6 +56,7 @@ imports_to_test = [
     ("modules.listener", ["run_listener"]),
     ("modules.subtake", ["run_subtake"]),
     ("modules.target_queue", ["run_target_queue"]),
+    ("modules.bypass", ["run_bypass", "bypass_help"]),
     ("modules.nmap_parser", ["parse_nmap_xml", "run_nmap_parser", "format_nmap_results"]),
     ("modules.leak_check", ["run_leak_check", "check_hibp_email", "format_leak_results"]),
 ]
@@ -212,7 +213,19 @@ test("run_leak_check with no API key returns gracefully", lambda: (
 print("\n--- Payload Factory Tests ---")
 test("PayloadFactory() init", lambda: importlib.import_module("modules.payload_factory").PayloadFactory())
 
-# 15. Downloader
+# 15. Bypass module
+print("\n--- Bypass Module Tests ---")
+test("bypass_help completes", lambda: importlib.import_module("modules.bypass").bypass_help())
+test("BYPASS_METHODS has entries", lambda: (
+    bm := importlib.import_module("modules.bypass").BYPASS_METHODS,
+    None if len(bm) > 0 else (_ for _ in ()).throw(AssertionError("BYPASS_METHODS empty"))
+))
+test("ADMIN_PATHS has entries", lambda: (
+    ap := importlib.import_module("modules.bypass").ADMIN_PATHS,
+    None if len(ap) > 0 else (_ for _ in ()).throw(AssertionError("ADMIN_PATHS empty"))
+))
+
+# 16. Downloader
 print("\n--- Downloader Tests ---")
 test("MODELS has entries", lambda: (
     m := importlib.import_module("core.downloader").MODELS,

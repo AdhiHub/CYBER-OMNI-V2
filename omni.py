@@ -38,6 +38,7 @@ from core.orchestrator import Orchestrator
     from modules.listener import run_listener
     from modules.subtake import run_subtake
     from modules.target_queue import run_target_queue
+    from modules.bypass import run_bypass, bypass_help
 except ImportError as _ie:
     _MISSING_DEPS.append(str(_ie))
 
@@ -274,7 +275,7 @@ class CyberOmni:
                 self._auto_handle_error(e, traceback.format_exc(), text)
             return True
 
-        if text.startswith("/nmap-parse ") or text.startswith("/cve") or text.startswith("/searchsploit") or text.startswith("/listen") or text.startswith("/subtake") or text.startswith("/queue") or text.startswith("/learn ") or text == "/knowledge" or text.startswith("/know ") or text.startswith("/search ") or text.startswith("/deepsearch ") or text == "/darkweb" or text == "/mode" or text == "/stealth" or text.startswith("/extract ") or text == "/feedback" or text == "/tools" or text.startswith("/install ") or text.startswith("/leak ") or text.startswith("/hibp ") or text == "/model" or text == "/save" or text == "/new" or text == "/tor":
+        if text.startswith("/nmap-parse ") or text.startswith("/cve") or text.startswith("/searchsploit") or text.startswith("/listen") or text.startswith("/subtake") or text.startswith("/queue") or text.startswith("/learn ") or text == "/knowledge" or text.startswith("/know ") or text.startswith("/search ") or text.startswith("/deepsearch ") or text == "/darkweb" or text == "/mode" or text == "/stealth" or text.startswith("/extract ") or text == "/feedback" or text == "/tools" or text.startswith("/install ") or text.startswith("/leak ") or text.startswith("/hibp ") or text == "/model" or text == "/save" or text == "/new" or text == "/tor" or text.startswith("/bypass"):
             try:
                 if text.startswith("/learn "):
                     learn_file(text[7:].strip())
@@ -297,6 +298,17 @@ class CyberOmni:
                     run_subtake(text[9:].strip())
                 elif text.startswith("/queue"):
                     run_target_queue(text[7:].strip())
+                elif text.startswith("/bypass"):
+                    parts = text.split(None, 2)
+                    target = parts[1] if len(parts) > 1 else ""
+                    method = parts[2] if len(parts) > 2 else "auto"
+                    if target == "help":
+                        bypass_help()
+                    elif target:
+                        run_bypass(target, method)
+                    else:
+                        print(colored("  Usage: /bypass <target> [method]", "33"))
+                        print(colored("  Methods: auto, rotate, profile, path, methods, headers, auth, admin, mobile", "33"))
                 elif text == "/model":
                     print(colored(f"[*] {self.ai.get_info()}", "33"))
                 elif text == "/save":
@@ -931,6 +943,7 @@ def setup_tab_completion():
             "/nmap-parse", "/leak", "/hibp", "/debug",
             "/guide", "/suggest", "/next", "/status",
             "/rotate", "/dnstest", "/anonymity", "/mac", "/mimic",
+            "/bypass",
         ]
         completer = WordCompleter(COMMANDS, ignore_case=True)
         hist_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".omnist_history")
