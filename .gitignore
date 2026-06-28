@@ -1,0 +1,50 @@
+# Models (huge - 700MB to 4.5GB each)
+models/*.gguf
+
+# Config with secrets (webhooks, tokens, keys)
+config.json
+discord_webhook.json
+telegram_bot.json
+suggestions.txt
+
+# Session data
+session.json
+
+# Reports
+reports/
+
+# Payloads
+payloads/
+
+# Extracted data
+extracted_data/
+
+# ExploitDB data
+exploitdb_data/
+
+# Knowledge base index
+knowledge/index.json
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+*.egg
+dist/
+build/
+
+# Environment
+.env
+.venv
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db

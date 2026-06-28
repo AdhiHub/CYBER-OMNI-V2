@@ -1,0 +1,33 @@
+# CYBER-OMNI Training Dependencies
+# Install: pip install -r training/requirements.txt
+
+# Core ML
+torch>=2.1.0
+torchvision
+torchaudio
+
+# Unsloth (efficient LoRA/QLoRA training)
+# Windows: pip install unsloth
+# Linux: pip install unsloth
+unsloth
+
+# HuggingFace
+transformers>=4.36.0
+datasets>=2.14.0
+trl>=0.7.0
+peft>=0.6.0
+accelerate>=0.24.0
+sentencepiece
+protobuf
+
+# Training
+wandb  # Optional: logging
+bitsandbytes  # 8-bit optimizers
+scipy
+
+# Evaluation
+einops
+xformers  # Memory-efficient attention (Linux)
+
+# For dataset generation
+requests>=2.31.0
