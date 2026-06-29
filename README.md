@@ -337,5 +337,4 @@ Private — All Rights Reserved. AdhiHub 2026.
 ---
 
 **Brand:** AdhiHub  
-**Email:** adhithyajeyanraj@gmail.com  
 **Repo:** https://github.com/AdhiHub/CYBER-OMNI-V2
