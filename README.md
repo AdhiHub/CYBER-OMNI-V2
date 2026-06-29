@@ -3,7 +3,7 @@
 **Zero Refusal AI Pentesting Platform** — Fully Offline · TOR-Anonymized · Autonomous Execution
 
 Powered by **AdhiHub**  
-Contact: adhithyajeyanraj@gmail.com
+Contact:........
 
 ---
 
