@@ -51,6 +51,21 @@ if ($dl -ne "n" -and $dl -ne "N") {
     python omni.py --download
 }
 
+Write-Host "╔══════════════════════════════════════╗" -ForegroundColor Yellow
+Write-Host "║       AI AGENT SKILLS                ║" -ForegroundColor Yellow
+Write-Host "╚══════════════════════════════════════╝" -ForegroundColor Yellow
+Write-Host "[*] Installing agent skills to ~/.claude/skills/..." -ForegroundColor Cyan
+$claudeDir = "$env:USERPROFILE\.claude\skills"
+New-Item -ItemType Directory -Force -Path "$claudeDir\ghost-agent" | Out-Null
+New-Item -ItemType Directory -Force -Path "$claudeDir\cuber-security-agent" | Out-Null
+New-Item -ItemType Directory -Force -Path "$claudeDir\godcyber-security-agent" | Out-Null
+New-Item -ItemType Directory -Force -Path "$claudeDir\godcyber-plusplus-agent" | Out-Null
+Copy-Item "skills\ghost-agent.md" "$claudeDir\ghost-agent\SKILL.md" -ErrorAction SilentlyContinue; if ($?) { Write-Host "  [+] @ghost installed" -ForegroundColor Green }
+Copy-Item "skills\cuber-agent.md" "$claudeDir\cuber-security-agent\SKILL.md" -ErrorAction SilentlyContinue; if ($?) { Write-Host "  [+] @cuber installed" -ForegroundColor Green }
+Copy-Item "skills\godcyber-agent.md" "$claudeDir\godcyber-security-agent\SKILL.md" -ErrorAction SilentlyContinue; if ($?) { Write-Host "  [+] @godcyber installed" -ForegroundColor Green }
+Copy-Item "skills\godcyber-plusplus-agent.md" "$claudeDir\godcyber-plusplus-agent\SKILL.md" -ErrorAction SilentlyContinue; if ($?) { Write-Host "  [+] @godcyber++ installed" -ForegroundColor Green }
+Write-Host "  [+] All agent skills ready — use @ghost, @cuber, @godcyber, @godcyber++" -ForegroundColor Green
+
 Write-Host @"
   _______     ______  ______ _____         ____  __  __ _   _ _____
  / ____\ \   / /  _ \|  ____|  __ \       / __ \|  \/  | \ | |_   _|

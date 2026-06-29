@@ -20,8 +20,8 @@ echo -e "+------------------------------------------------------+${NC}"
 echo -e "${PURPLE}              >> Powered by ${CYAN}AdhiHub${PURPLE} <<${NC}"
 echo ""
 
-REPO_URL="https://github.com/AdhiHub/AdhiHub-CYBER-OMNI.git"
-INSTALL_DIR="$HOME/AdhiHub-CYBER-OMNI"
+REPO_URL="https://github.com/AdhiHub/CYBER-OMNI-V2.git"
+INSTALL_DIR="$HOME/CYBER-OMNI-V2"
 
 # Check if we can sudo (only when needed)
 can_sudo() {
@@ -139,6 +139,19 @@ if [ "$dlnow" = "1" ]; then
     echo -e "${YELLOW}[*] This is a one-time download. After this, it works fully offline.${NC}"
     $PYTHON omni.py --download 2>/dev/null || echo -e "${YELLOW}[*] Run 'python omni.py --download' manually later${NC}"
 fi
+
+# 7. Install agent skills for local LLM (ghost, cuber, godcyber, godcyber++)
+echo -e "\n${YELLOW}╔══════════════════════════════════════╗"
+echo -e "║       AI AGENT SKILLS                  ║"
+echo -e "╚══════════════════════════════════════╝${NC}"
+echo -e "${CYAN}[*] Installing agent skills to ~/.claude/skills/...${NC}"
+CLAUDE_DIR="$HOME/.claude/skills"
+mkdir -p "$CLAUDE_DIR/ghost-agent" "$CLAUDE_DIR/cuber-security-agent" "$CLAUDE_DIR/godcyber-security-agent" "$CLAUDE_DIR/godcyber-plusplus-agent"
+cp "skills/ghost-agent.md" "$CLAUDE_DIR/ghost-agent/SKILL.md" 2>/dev/null && echo -e "${GREEN}  [+] @ghost installed${NC}" || echo -e "${YELLOW}  [!] @ghost install skipped${NC}"
+cp "skills/cuber-agent.md" "$CLAUDE_DIR/cuber-security-agent/SKILL.md" 2>/dev/null && echo -e "${GREEN}  [+] @cuber installed${NC}" || echo -e "${YELLOW}  [!] @cuber install skipped${NC}"
+cp "skills/godcyber-agent.md" "$CLAUDE_DIR/godcyber-security-agent/SKILL.md" 2>/dev/null && echo -e "${GREEN}  [+] @godcyber installed${NC}" || echo -e "${YELLOW}  [!] @godcyber install skipped${NC}"
+cp "skills/godcyber-plusplus-agent.md" "$CLAUDE_DIR/godcyber-plusplus-agent/SKILL.md" 2>/dev/null && echo -e "${GREEN}  [+] @godcyber++ installed${NC}" || echo -e "${YELLOW}  [!] @godcyber++ install skipped${NC}"
+echo -e "${GREEN}  [+] All agent skills ready — use @ghost, @cuber, @godcyber, @godcyber++${NC}"
 
 echo ""
 echo -e "${GREEN}  _______     ______  ______ _____         ____  __  __ _   _ _____ "
