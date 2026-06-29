@@ -210,30 +210,40 @@ def check_anonymity():
         return False
 
 
+def _find_tor():
+    """Find tor.exe across common locations. Returns (path, torrc) or (None, None)."""
+    userprofile = os.environ.get("USERPROFILE", "")
+    tor_browser_base = os.path.join(userprofile, "tor-browser", "Browser", "TorBrowser")
+    candidates = [
+        (os.path.join(userprofile, "tor-browser", "Browser", "TorBrowser", "Tor", "tor.exe"),
+         os.path.join(tor_browser_base, "Data", "Tor", "torrc")),
+        (r"C:\Program Files\Tor\tor.exe",
+         r"C:\Program Files\Tor\torrc"),
+        (r"C:\Program Files (x86)\Tor\tor.exe",
+         r"C:\Program Files (x86)\Tor\torrc"),
+        ("tor", ""),
+    ]
+    for exe, rc in candidates:
+        if exe == "tor":
+            return ("tor", "")
+        if os.path.exists(exe):
+            return (exe, rc if os.path.exists(rc) else "")
+    return (None, None)
+
+
 def start_tor():
     print(colored("[*] Attempting to start TOR...", "33"))
     try:
-        if sys.platform == "win32":
-            tor_paths = [
-                r"C:\Program Files\Tor\tor.exe",
-                r"C:\Program Files (x86)\Tor\tor.exe",
-            ]
-            for p in tor_paths:
-                if os.path.exists(p):
-                    subprocess.Popen([p], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                    print(colored("[+] TOR starting...", "32"))
-                    return True
+        tor_exe, torrc = _find_tor()
+        if not tor_exe:
             print(colored("[!] TOR not found. Install from https://torproject.org", "31"))
             return False
-        else:
-            result = subprocess.run(["tor", "--version"], capture_output=True, text=True)
-            if result.returncode == 0:
-                subprocess.Popen(["tor"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                print(colored("[+] TOR starting...", "32"))
-                return True
-            else:
-                print(colored("[!] Install TOR: apt install tor or pkg install tor", "31"))
-                return False
+        args = [tor_exe]
+        if torrc:
+            args.extend(["-f", torrc])
+        subprocess.Popen(args, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print(colored("[+] TOR starting...", "32"))
+        return True
     except Exception as e:
         print(colored(f"[!] Failed: {e}", "31"))
         return False
