@@ -1,6 +1,7 @@
 #!/bin/bash
 # AdhiHub CYBER-OMNI v2.0 Installer
-# One command: bash <(curl -sSL https://raw.githubusercontent.com/AdhiHub/AdhiHub-CYBER-OMNI/main/install.sh)
+# One command (Linux): bash <(curl -sSL https://raw.githubusercontent.com/AdhiHub/CYBER-OMNI-V2/main/install.sh)
+# One command (Termux): curl -sSL https://raw.githubusercontent.com/AdhiHub/CYBER-OMNI-V2/main/termux-install.sh | bash
 
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; CYAN='\033[0;36m'; PURPLE='\033[0;35m'; NC='\033[0m'
 
@@ -23,6 +24,12 @@ echo ""
 REPO_URL="https://github.com/AdhiHub/CYBER-OMNI-V2.git"
 INSTALL_DIR="$HOME/CYBER-OMNI-V2"
 
+# Auto-detect OS
+IS_TERMUX=false
+if [ -n "$PREFIX" ] && [ -d "$PREFIX/tmp" ]; then
+    IS_TERMUX=true
+fi
+
 # Check if we can sudo (only when needed)
 can_sudo() {
     command -v sudo &>/dev/null && sudo -n true 2>/dev/null
@@ -30,13 +37,15 @@ can_sudo() {
 
 # Try to install system packages (best-effort, no sudo = skip)
 try_install_pkg() {
+    if $IS_TERMUX && command -v pkg &>/dev/null; then
+        pkg install -y "$@" 2>/dev/null; return $?
+    fi
     if can_sudo; then
         if command -v apt &>/dev/null; then sudo apt install -y "$@" 2>/dev/null; return $?; fi
-        if command -v pkg &>/dev/null; then pkg install -y "$@" 2>/dev/null; return $?; fi
         if command -v pacman &>/dev/null; then sudo pacman -Sy --noconfirm "$@" 2>/dev/null; return $?; fi
-    else
-        echo -e "${YELLOW}  [!] No sudo access. Install manually: sudo apt install $@${NC}"
     fi
+    if command -v pkg &>/dev/null; then pkg install -y "$@" 2>/dev/null; return $?; fi
+    echo -e "${YELLOW}  [!] Install manually: apt install $@${NC}"
     return 1
 }
 
